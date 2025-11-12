@@ -4,24 +4,215 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nemesis Charakterauswahl</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
+  /* --- Grundlayout --- */
   body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    background: #111;
-    color: #eee;
+    margin: 0;
+    padding: 0;
+    font-family: 'Rajdhani', sans-serif;
+    background: radial-gradient(circle at top, #0a0a0a 0%, #000 80%);
+    color: #d0f8ff;
+    min-height: 100vh;
+    background-image: url('https://i.ibb.co/tDQ1rXZ/metal-texture-dark.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    overflow-x: hidden;
   }
-  h1 { color: #8cfffb; }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    color: #8cfffb;
+    letter-spacing: 3px;
+    margin-top: 30px;
+    text-shadow: 0 0 10px #00e1ff;
+  }
+
+  /* --- Auswahlbereich --- */
   #choices {
     display: flex;
-    gap: 20px;
-    margin-top: 20px;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 30px;
   }
+
   .character {
-    background: #1e1e1e;
-    border: 2px solid #555;
-    padding: 15px;
-    border-radius: 10px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #333;
+    padding: 20px;
+    border-radius: 12px;
     cursor: pointer;
-    width: 180px;
+    width: 200px;
+    text-align: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.1);
+  }
+
+  .character:hover {
+    border-color: #00e1ff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    transform: translateY(-3px);
+    background: rgba(25, 25, 25, 0.95);
+  }
+
+  .character b {
+    display: block;
+    color: #fff;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+
+  .character i {
+    color: #ff8080;
+  }
+
+  /* --- Logbereich --- */
+  #log {
+    max-width: 700px;
+    margin: 40px auto;
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 15px;
+    height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    color: #b8f2ff;
+    box-shadow: inset 0 0 8px #00e1ff33;
+  }
+
+  #log b {
+    color: #ff4040;
+  }
+
+  /* --- Button --- */
+  #controls {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  button {
+    background: linear-gradient(90deg, #00e1ff, #007f8c);
+    color: #000;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    background: linear-gradient(90deg, #ff4b4b, #8c0000);
+    color: #fff;
+    box-shadow: 0 0 10px #ff4b4b;
+  }
+
+  /* --- Nebel-Effekt --- */
+  .fog {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://i.ibb.co/b5ptCCz/fog-overlay.png') repeat;
+    opacity: 0.05;
+    pointer-events: none;
+    animation: fogmove 60s linear infinite;
+  }
+
+  @keyframes fogmove {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 0; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="fog"></div>
+
+<h1>Nemesis Charakterauswahl</h1>
+
+<div id="controls">
+  <button onclick="resetGame()">Reset</button>
+</div>
+
+<div id="choices"></div>
+<div id="log"></div>
+
+<script>
+const baseCharacters = [
+  { name: "Soldier", color: "Rot" },
+  { name: "Scout", color: "Rot" },
+  { name: "Mechanic", color: "Rot" },
+  { name: "Pilot", color: "Blau" },
+  { name: "Captain", color: "Blau" },
+  { name: "Engineer", color: "Blau" },
+  { name: "Hacker", color: "Grün" },
+  { name: "Lab Rat", color: "Grün" },
+  { name: "Janitor", color: "Grün" },
+  { name: "Warden", color: "Gelb" },
+  { name: "Crisis Officer", color: "Gelb" },
+  { name: "Guard", color: "Gelb" },
+  { name: "Convict", color: "Orange" },
+  { name: "Cleaner", color: "Orange" },
+  { name: "Android", color: "Orange" },
+  { name: "Psychologist", color: "Violett" },
+  { name: "CEO", color: "Violett" },
+  { name: "Bounty Hunter", color: "Violett" }
+];
+
+let remaining = [];
+const log = document.getElementById("log");
+const choicesDiv = document.getElementById("choices");
+
+function logMsg(msg) {
+  log.innerHTML += msg + "<br>";
+  log.scrollTop = log.scrollHeight;
+}
+
+function resetGame() {
+  remaining = [...baseCharacters];
+  log.innerHTML = "<b>System-Reset:</b> Neue Auswahl gestartet.<br>";
+  showChoices();
+}
+
+function getRandomChoices() {
+  if (remaining.length < 2) return remaining;
+  const shuffled = [...remaining].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 2);
+}
+
+function showChoices() {
+  choicesDiv.innerHTML = "";
+  if (remaining.length === 0) {
+    logMsg("<b>Alle Charaktere entfernt. Auswahl abgeschlossen.</b>");
+    return;
+  }
+  const [c1, c2] = getRandomChoices();
+  [c1, c2].forEach(c => {
+    const div = document.createElement("div");
+    div.className = "character";
+    div.innerHTML = `<b>${c.name}</b><i>${c.color}</i>`;
+    div.onclick = () => chooseCharacter(c);
+    choicesDiv.appendChild(div);
+  });
+}
+
+function chooseCharacter(chosen) {
+  logMsg(`> Spieler wählt ${chosen.name} (${chosen.color})`);
+  remaining = remaining.filter(c => c.color !== chosen.color);
+  showChoices();
+}
+
+resetGame();
+</script>
+</body>
+</html>
