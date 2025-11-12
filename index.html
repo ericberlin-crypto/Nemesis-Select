@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-  /* --- Grundlayout --- */
   body {
     margin: 0;
     padding: 0;
@@ -17,9 +16,6 @@
     background: radial-gradient(circle at top, #0a0a0a 0%, #000 80%);
     color: #d0f8ff;
     min-height: 100vh;
-    background-image: url('https://i.ibb.co/tDQ1rXZ/metal-texture-dark.jpg');
-    background-size: cover;
-    background-attachment: fixed;
     overflow-x: hidden;
   }
 
@@ -32,7 +28,6 @@
     text-shadow: 0 0 10px #00e1ff;
   }
 
-  /* --- Auswahlbereich --- */
   #choices {
     display: flex;
     flex-wrap: wrap;
@@ -71,7 +66,6 @@
     color: #ff8080;
   }
 
-  /* --- Logbereich --- */
   #log {
     max-width: 700px;
     margin: 40px auto;
@@ -86,11 +80,8 @@
     box-shadow: inset 0 0 8px #00e1ff33;
   }
 
-  #log b {
-    color: #ff4040;
-  }
+  #log b { color: #ff4040; }
 
-  /* --- Button --- */
   #controls {
     text-align: center;
     margin-top: 15px;
@@ -115,23 +106,22 @@
     box-shadow: 0 0 10px #ff4b4b;
   }
 
-  /* --- Nebel-Effekt --- */
+  /* Dezent animierter Nebel (lokal sicher eingebunden) */
   .fog {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://i.ibb.co/b5ptCCz/fog-overlay.png') repeat;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
     opacity: 0.05;
     pointer-events: none;
     animation: fogmove 60s linear infinite;
   }
 
   @keyframes fogmove {
-    from { background-position: 0 0; }
-    to { background-position: 1000px 0; }
+    from { transform: translateX(0); }
+    to { transform: translateX(-200px); }
   }
-
 </style>
 </head>
 <body>
@@ -212,7 +202,15 @@ function chooseCharacter(chosen) {
   showChoices();
 }
 
-resetGame();
+// Start nach kurzer Verzögerung zur Sicherheit
+window.onload = () => resetGame();
 </script>
+
+<noscript>
+  <p style="color:white; text-align:center; margin-top:50px;">
+    ⚠️ JavaScript ist deaktiviert – bitte aktivieren, um das Tool zu verwenden.
+  </p>
+</noscript>
+
 </body>
 </html>
