@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nemesis Charakterauswahl</title>
+<title>BBB Nemesis Charakterauswahl</title>
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
@@ -128,7 +128,7 @@
 
 <div class="fog"></div>
 
-<h1>Nemesis Charakterauswahl</h1>
+<h1>BBB Nemesis Charakterauswahl</h1>
 
 <div id="controls">
   <button onclick="resetGame()">Reset</button>
@@ -149,7 +149,7 @@ const baseCharacters = [
   { name: "Lab Rat", color: "Grün" },
   { name: "Janitor", color: "Grün" },
   { name: "Warden", color: "Gelb" },
-  { name: "Crisis Officer", color: "Gelb" },
+  { name: "Medic", color: "Gelb" },
   { name: "Guard", color: "Gelb" },
   { name: "Convict", color: "Orange" },
   { name: "Cleaner", color: "Orange" },
@@ -183,7 +183,7 @@ function getRandomChoices() {
 function showChoices() {
   choicesDiv.innerHTML = "";
   if (remaining.length === 0) {
-    logMsg("<b>Alle Charaktere entfernt. Auswahl abgeschlossen.</b>");
+    logMsg("<b>Alle Charaktere ausgewählt. Auswahl abgeschlossen.</b>");
     return;
   }
   const [c1, c2] = getRandomChoices();
